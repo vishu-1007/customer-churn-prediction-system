@@ -1,0 +1,81 @@
+project:
+  name: "Customer Churn Prediction"
+  version: "1.0.0"
+  author: "Goli Raghu Sharan Teja"
+
+data:
+  raw_path: "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+  processed_path: "data/processed/telco_processed.csv"
+  test_size: 0.2
+  random_state: 42
+
+preprocessing:
+  target_column: "Churn"
+  drop_columns: ["customerID"]
+  binary_columns:
+    - Partner
+    - Dependents
+    - PhoneService
+    - PaperlessBilling
+    - MultipleLines
+    - OnlineSecurity
+    - OnlineBackup
+    - DeviceProtection
+    - TechSupport
+    - StreamingTV
+    - StreamingMovies
+  categorical_columns:
+    - InternetService
+    - Contract
+    - PaymentMethod
+  numerical_columns:
+    - tenure
+    - MonthlyCharges
+    - TotalCharges
+
+smote:
+  random_state: 42
+  k_neighbors: 5
+
+models:
+  save_dir: "models"
+  logistic_regression:
+    max_iter: 1000
+    random_state: 42
+  random_forest:
+    n_estimators: 200
+    random_state: 42
+    n_jobs: -1
+  xgboost:
+    n_estimators: 200
+    random_state: 42
+    eval_metric: "logloss"
+    verbosity: 0
+
+optuna:
+  n_trials: 50
+  direction: "maximize"
+  metric: "f1"
+  timeout: 300
+
+evaluation:
+  threshold: 0.5
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+    - roc_auc
+
+shap:
+  max_display: 12
+  background_samples: 100
+
+outputs:
+  plots_dir: "outputs/plots"
+  reports_dir: "outputs/reports"
+  logs_dir: "logs"
+
+streamlit:
+  title: "Customer Churn Prediction Dashboard"
+  page_icon: "📉"
